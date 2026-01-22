@@ -1,0 +1,2 @@
+timestamp,image_path,n_masked_pixels,mean_r,mean_g,mean_b,mean_exg,mean_g_over_sum,mean_g_minus_r
+2018-06-01 12:00:01,test/data/image.jpg,1333023.0,91.9546890258789,115.17597198486328,39.56635284423828,98.8309097290039,0.46899253129959106,23.221290588378906

@@ -1,0 +1,14 @@
+name: imgts
+channels:
+  - pytorch
+  - conda-forge
+
+dependencies:
+  - python
+  - numpy
+  - opencv
+  - pytorch
+  - torchvision
+  - pillow
+  - pandas
+  - pip
