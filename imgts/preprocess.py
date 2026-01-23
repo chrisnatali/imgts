@@ -9,9 +9,9 @@ import pandas as pd
 import argparse
 
 
-# ---------------------------
-# EXIF helper (DateTime)
-# ---------------------------
+"""
+EXIF helper constants for getting attributes from image metadata
+"""
 TAGS = {v: k for k, v in PIL.ExifTags.TAGS.items()}
 DT_TAG = TAGS.get("DateTime", None)
 

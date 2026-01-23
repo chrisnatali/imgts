@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# TODO: Factor out util and io functions
 """
 Greenness time series from a table of image paths + timestamps, using a static bitmask.
 
