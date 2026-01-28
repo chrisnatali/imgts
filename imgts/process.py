@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """
-Greenness time series from a table of image paths + timestamps, using a static bitmask.
+Compute greenness statistic time series from a table of image paths + timestamps, using a static bitmask.
 
 Input (--image_table_path):
   - CSV or Parquet with columns: image_path, timestamp
-    - image_path: path to JPEG/PNG frame
-    - timestamp: carried through to output (kept as string)
+    - image_path: path to JPEG/PNG image (all images should be same dimensions)
+    - timestamp: timestamp associated with corresponding image
+
 
 Mask (--mask_path):
-  - Bitmask image where nonzero pixels are INCLUDED.
+  - Bitmask image (aka Region of Interest [ROI]) of the same dimensions as the timeseries images
+  - Applied to all images before processing to select pixels of interest
+  - Nonzero pixels are interpreted as True.
 
-Output (--output_path) Where to write the CSV with columns:
+Output (--output_path) Where to write the output statistic CSV with columns:
   timestamp, image_path, n_masked_pixels, mean_r, mean_g, mean_b, mean_exg, mean_g_over_sum, mean_g_minus_r
 
 Performance:
