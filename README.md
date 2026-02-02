@@ -1,6 +1,6 @@
 # Image Time Series Processing Library (imgts)
 
-This library was written to streamline computing vegetation index statistics from image timeseries. The functionality here was meant to be comparable to that of the [extractVIs.R](https://github.com/gianlucafilippa/phenopix/blob/master/R/extractVIs.R) function from the [phenopix](https://github.com/gianlucafilippa/phenopix) R library. The metrics computations run orders of magnitude faster in the imgts library vs the corresponding R version.
+This library was written to make computing vegetation index statistics from image timeseries simple and fast. The functionality here is comparable to that of the [extractVIs.R](https://github.com/gianlucafilippa/phenopix/blob/master/R/extractVIs.R) function from the [phenopix](https://github.com/gianlucafilippa/phenopix) R library. The metrics computations run orders of magnitude faster in the imgts library vs the corresponding R version.
 
 ## Usage
 
