@@ -76,7 +76,7 @@ python -m imgts.preprocess polygons_to_image --json_path test/data/roi-polys-raw
 python -m imgts.preprocess apply_mask_and_write --mask_path test/data/roi-mask.png --image_path test/data/image.jpg --output_path test/data/out/masked-image.jpg
 
 # image_dir_to_timeseries
-python -m imgts.preprocess image_dir_to_timeseries --image_dir test/data/t1_images --output_path test/data/out/t1_img_ts.csv
+python -m imgts.preprocess image_dir_to_timeseries --image_dir test/data/s1/2018 --output_path test/data/out/s1_2018_img_ts.csv
 
 # Then compare the files in test/data/out to corresponding files in test/data
 ```
@@ -88,7 +88,7 @@ python -m imgts.preprocess image_dir_to_timeseries --image_dir test/data/t1_imag
 python -m imgts.process --images test/data/single_img_ts.csv --mask test/data/roi-mask.png --out test/data/out/single_img_out.csv
 
 # Run for t1 image directory set
-python -m imgts.process --images test/data/t1_img_ts.csv --mask test/data/roi-mask.png --out test/data/out/t1_img_ts_out.csv
+python -m imgts.process --images test/data/s1_2018_img_ts.csv --mask test/data/roi-mask.png --out test/data/out/s1_2018_img_ts_out.csv
 
 ```
 
