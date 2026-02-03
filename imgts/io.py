@@ -5,23 +5,47 @@ import json
 import PIL
 import PIL.Image
 import pandas as pd
+import fsspec
 
 
-def load_image_pil(path: Path) -> PIL.Image.Image:
+def load_image_pil(path: "str | Path") -> PIL.Image.Image:
     """
     PIL is needed for reading EXIF metadata (e.g. timestamp) from a JPEG image
     (otherwise use cv2 lib)
+
+    Note: path can be a local file or cloud bucket uri
     """
-    return PIL.Image.open(path)
+    with fsspec.open(path, "rb") as f:
+        image = PIL.Image.open(f)
+        image.load()
+
+    return image
 
 
-def load_image(path: Path) -> np.ndarray:
+def _decode_image_bytes(data: bytes) -> np.ndarray:
+    arr = np.frombuffer(data, dtype=np.uint8)
+    img = cv2.imdecode(arr, cv2.IMREAD_UNCHANGED)
+    if img is None:
+        raise ValueError("OpenCV failed to decode image bytes")
+    return img
+
+
+def _read_bytes_any(path: "str | Path") -> bytes:
+    p = str(path)
+    with fsspec.open(p, "rb") as f:
+        return f.read()
+
+
+def load_image(path: "str | Path") -> np.ndarray:
     """
     Read image and return as RGB or RGBA or GRAY depending on image
-    Note: opencv reads/writes as BGR by default, so we explicitly convert to RGB for consistency
+
+    Notes:
+    - opencv reads/writes as BGR by default, so we explicitly convert to RGB for consistency
+    - path can be a local file or cloud bucket uri
     """
     # read raw to keep alpha if present
-    image = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    image = _decode_image_bytes(_read_bytes_any(path))
     if image is None:
         raise RuntimeError(f"Failed to read image at {path}")
 

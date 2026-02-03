@@ -115,7 +115,7 @@ def cmd_image_dir_to_timeseries(args: argparse.Namespace) -> None:
     jpeg_image_paths = sorted(args.image_dir.glob("*.jpg"))
     timeseries = images_to_timeseries(jpeg_image_paths)
     args.output_path.parent.mkdir(parents=True, exist_ok=True)
-    timeseries.to_csv(args.output_path, index=False)
+    timeseries.to_csv(args.output_path, date_format="%Y-%m-%dT%H:%M:%S", index=False)
 
 
 def main(argv: list[str] | None = None) -> int:
