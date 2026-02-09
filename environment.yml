@@ -13,3 +13,6 @@ dependencies:
   - pandas
   - pip
   - fsspec
+  - gcfs
+  - aiohttp
+  - requests
