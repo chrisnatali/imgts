@@ -32,7 +32,7 @@ def images_to_timeseries(jpeg_image_paths: list[str]) -> pd.DataFrame:
     """
     rows: list[dict[str, object]] = []
     for path in jpeg_image_paths:
-        pil_image = io.load_image_pil(Path(path))
+        pil_image = io.load_image_pil(path)
         rows.append({"timestamp": get_timestamp(pil_image), "image_path": path})
 
     return pd.DataFrame(rows)
@@ -58,7 +58,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p1.add_argument(
         "--ref_image_path",
-        type=Path,
+        type=str,
         required=True,
         help="Path to reference image for bit mask bounds",
     )
@@ -72,9 +72,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Apply a mask image to an input image and write the result",
     )
     p2.add_argument("--mask_path", type=Path, required=True, help="Path to mask image")
-    p2.add_argument(
-        "--image_path", type=Path, required=True, help="Path to input image"
-    )
+    p2.add_argument("--image_path", type=str, required=True, help="Path to input image")
     p2.add_argument(
         "--output_path", type=Path, required=True, help="Path to output image"
     )
@@ -82,9 +80,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     p3 = subparsers.add_parser(
         "image_dir_to_timeseries",
-        help="Convert an image directory into a timeseries CSV (suitable for input to process)",
+        help="Convert an image directory (could be cloud URI) into a timeseries CSV (suitable for input to process)",
     )
-    p3.add_argument("--image_dir", type=Path, required=True, help="Directory of images")
+    p3.add_argument(
+        "--image_dir", type=str, required=True, help="Directory/URI of jpg images"
+    )
     p3.add_argument(
         "--output_path", type=Path, required=True, help="Path to output CSV"
     )
@@ -112,7 +112,7 @@ def cmd_apply_mask_and_write(args: argparse.Namespace) -> None:
 
 
 def cmd_image_dir_to_timeseries(args: argparse.Namespace) -> None:
-    jpeg_image_paths = sorted(args.image_dir.glob("*.jpg"))
+    jpeg_image_paths = sorted(io.list_jpg_files(args.image_dir))
     timeseries = images_to_timeseries(jpeg_image_paths)
     args.output_path.parent.mkdir(parents=True, exist_ok=True)
     timeseries.to_csv(args.output_path, date_format="%Y-%m-%dT%H:%M:%S", index=False)

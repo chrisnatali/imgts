@@ -277,7 +277,7 @@ def main() -> None:
         help="CSV/Parquet with columns image_path,timestamp",
     )
     ap.add_argument(
-        "--mask_path", type=Path, required=True, help="Bitmask image (nonzero=include)"
+        "--mask_path", type=str, required=True, help="Bitmask image (nonzero=include)"
     )
     ap.add_argument("--output_path", type=Path, required=True, help="Output CSV path")
     ap.add_argument(

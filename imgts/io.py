@@ -8,6 +8,37 @@ import pandas as pd
 import fsspec
 
 
+def list_jpg_files(base_uri: str):
+    """
+    List all .jpg files with full URIs suitable for fsspec.open().
+
+    Args:
+        base_uri: Base URI with protocol (e.g., 's3://bucket/path/') or simply the local filesystem path
+
+    Returns:
+        List of full URIs (could be local [and relative] file paths)
+    """
+    # Get filesystem and stripped path
+    fs, base_path = fsspec.core.url_to_fs(base_uri)
+
+    protocol = fs.protocol if isinstance(fs.protocol, str) else fs.protocol[0]
+
+    # We want to use whatever the user specified as the path if it is a local file
+    # path (i.e. if it is a relative path, then leave it)
+    if protocol == "file":
+        base_path = base_uri
+
+    # Glob for jpg files
+    pattern = f"{base_path.rstrip('/')}/*.jpg"
+    matched_paths = fs.glob(pattern)
+
+    if protocol == "file":
+        # This ensures we return the user specified path (not nec the absolute path)
+        return [path[path.rindex(base_path) :] for path in matched_paths]
+    else:
+        return [f"{protocol}://{path}" for path in matched_paths]
+
+
 def load_image_pil(path: "str | Path") -> PIL.Image.Image:
     """
     PIL is needed for reading EXIF metadata (e.g. timestamp) from a JPEG image
@@ -66,7 +97,7 @@ def load_image(path: "str | Path") -> np.ndarray:
     return image
 
 
-def load_image_mask(mask_path: Path) -> np.ndarray:
+def load_image_mask(mask_path: "str | Path") -> np.ndarray:
     """
     Load an image to be interpreted as a boolean mask.
     Returns an (H, W) boolean array where nonzero pixels => True.
@@ -78,8 +109,7 @@ def load_image_mask(mask_path: Path) -> np.ndarray:
     - If the image has 3 channels (BGR) convert to grayscale with
       cv2.cvtColor(..., COLOR_BGR2GRAY) and treat nonzero as included.
     """
-    # read raw to keep alpha if present
-    img = cv2.imread(str(mask_path), cv2.IMREAD_UNCHANGED)
+    img = _decode_image_bytes(_read_bytes_any(mask_path))
     if img is None:
         raise RuntimeError(f"Failed to read mask image at {mask_path}")
 

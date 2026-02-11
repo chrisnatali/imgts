@@ -87,7 +87,7 @@ python -m imgts.preprocess image_dir_to_timeseries --image_dir test/data/s1/2018
 # Run for single image
 python -m imgts.process --images test/data/single_img_ts.csv --mask test/data/roi-mask.png --out test/data/out/single_img_out.csv
 
-# Run for t1 image directory set
+# Run for s1 image directory set
 python -m imgts.process --images test/data/s1_2018_img_ts.csv --mask test/data/roi-mask.png --out test/data/out/s1_2018_img_ts_out.csv
 
 ```
